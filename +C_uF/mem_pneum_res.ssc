@@ -34,7 +34,6 @@ component mem_pneum_res
         G = {0,'1'}; %Azimuthal position of the outlet
         init_fill = {0,'1'}; %Initial fill
         d = {0,'mm'}; %Depth
-        w = {0,'mm'}; %Width
         anglength = {0,'1'}; %Angle of aperture
         InRad = {10,'mm'}; %Inner Radius
         OutRad = {20,'mm'}; %Outer Radius
@@ -48,6 +47,7 @@ component mem_pneum_res
         p0 = {101325,'Pa'};
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
+        w = {0,'mm'}; %Width
         V_total = {0,'mm^3'};
         Area = {1,'mm^2'};
         p_vap = {2329.575349457,'Pa'};
@@ -56,6 +56,7 @@ component mem_pneum_res
     function setup
         across(p,I.p);
         through(q,I.q);
+        w = 2*pi*InRad*anglength/360;
         Area = anglength*(pi/360)*(OutRad^2-InRad^2)
         V_total = Area*d;
         if init_fill >=1
@@ -117,7 +118,7 @@ component mem_pneum_res
             revOut == -1;
         end
 
-        p + p_Euler + p_cap == p_mem + p_cent;
+        p + p_Euler + p_cap  + p_cent == p_mem;
 
     end
 end
