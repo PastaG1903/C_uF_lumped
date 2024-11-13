@@ -74,7 +74,7 @@ component mem_pneum_res
         fill == V_liquid/V_total;
         f.der == f_dot;
         h_liquid == sqrt(OutRad^2-V_liquid*360/d/anglength/pi);
-        p_cent == 0.5*I.density*(OutRad^2-(OutRad-h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
+        p_cent == 0.5*I.density*(OutRad^2-(OutRad-(h_liquid))^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
         p_mem == 4*init_stress*mem_thick*(2*V_change/(pi*mem_rad^2))/mem_rad^2 + (8/3)*0.8*Bi_modulus*mem_thick*(2*V_change/(pi*mem_rad^2))^3/mem_rad^4;
         V_change == V_liquid;
         % p_pneum == p0*((V_total+V_change)/((V_total+V_change)-V_liquid))-p0 ;

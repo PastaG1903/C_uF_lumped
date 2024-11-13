@@ -62,7 +62,7 @@ component vented_chamber
         fill == V_liquid/V_total;
         f.der == f_dot;
         h_liquid == sqrt(OutRad^2-V_liquid*360/d/anglength/pi);
-        p_cent == 0.5*I.density*(OutRad^2-(OutRad-h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
+        p_cent == 0.5*I.density*(OutRad^2-(OutRad-(-h_liquid+InRad+OutRad))^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
         if V_liquid > 0
             if f_dot > 0
                 if fill > Euler_fill
