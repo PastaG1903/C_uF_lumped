@@ -18,16 +18,16 @@ set_param('untitled/vented_chamber','InRad','15')
 set_param('untitled/vented_chamber','OutRad','45')
 
 % RADIAL CHANNEL
-set_param('untitled/n_radial_channel','w','2')
-set_param('untitled/n_radial_channel','d','40')
+set_param('untitled/n_radial_channel','w','0.5') % in mm
+set_param('untitled/n_radial_channel','d','4000') % in um
 set_param('untitled/n_radial_channel','r_in','45')
 set_param('untitled/n_radial_channel','r_out','62')
 set_param('untitled/n_radial_channel','init_fill','0')
 set_param('untitled/n_radial_channel','theta','pi/4')
 
 % ISORADIAL CHANNEL
-set_param('untitled/n_isoradial_channel','w','2')
-set_param('untitled/n_isoradial_channel','d','40')
+set_param('untitled/n_isoradial_channel','w','0.5') % in mm
+set_param('untitled/n_isoradial_channel','d','4000') % in um
 set_param('untitled/n_isoradial_channel','anglength','45')
 set_param('untitled/n_isoradial_channel','r','62')
 set_param('untitled/n_isoradial_channel','init_fill','0')
@@ -50,7 +50,7 @@ simOut = sim('untitled.slx');
 % runCount = Simulink.sdi.getRunCount();
 runnn = Simulink.sdi.getAllRunIDs();
 % runID = Simulink.sdi.getRun(runCount);
-Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx');
+Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx','Signals','mem_pneum_res1/V_liquid');
 %export(runnn(runCount));
 close_system('./C_uF_lib.slx',0);
 close_system('./untitled.slx',0);
