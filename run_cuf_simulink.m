@@ -1,14 +1,53 @@
-load_system('./C_uF_lumped_MATLAB/C_uF_lib.slx');
-load_system('./C_uF_lumped_MATLAB/untitled.slx');
+load_system('./C_uF_lib.slx');
+load_system('./untitled.slx');
 
 % set_param("untitled","DataLogging","on");
 % set_param('./C_uF_lumped_MATLAB/untitled.slx/mem_pneum_res1.ssc','mem_rad','5');
 % save('Sim_Res.mat','simOut');
 
+% MODEL PARAMETERS
+
+% VENTED CHAMBER
+% set_param('untitled.slx/vented_chamber','init_fill','1')
+% set_param('untitled.slx/vented_chamber','d','4.04')
+% set_param('untitled.slx/vented_chamber','anglength','160')
+% set_param('untitled.slx/vented_chamber','InRad','15')
+% set_param('untitled.slx/vented_chamber','OutRad','45')
+
+% RADIAL CHANNEL
+% set_param('untitled.slx/n_radial_channel','w','2')
+% set_param('untitled.slx/n_radial_channel','d','40')
+% set_param('untitled.slx/n_radial_channel','r_in','45')
+% set_param('untitled.slx/n_radial_channel','r_out','62')
+% set_param('untitled.slx/n_radial_channel','init_fill','0')
+% set_param('untitled.slx/n_radial_channel','theta','pi/4')
+
+% ISORADIAL CHANNEL
+% set_param('untitled.slx/n_isoradial_channel','w','2')
+% set_param('untitled.slx/n_isoradial_channel','d','40')
+% set_param('untitled.slx/n_isoradial_channel','anglength','45')
+% set_param('untitled.slx/n_isoradial_channel','r','62')
+% set_param('untitled.slx/n_isoradial_channel','init_fill','0')
+% set_param('untitled.slx/n_isoradial_channel','theta','pi/4')
+% set_param('untitled.slx/n_isoradial_channel','dir','-1')
+
+% MEM PNEUM CHAMBER
+% set_param('untitled.slx/mem_pneum_res1','init_fill','1')
+% set_param('untitled.slx/mem_pneum_res1','d','4.04')
+% set_param('untitled.slx/mem_pneum_res1','anglength','160')
+% set_param('untitled.slx/mem_pneum_res1','InRad','15')
+% set_param('untitled.slx/mem_pneum_res1','OutRad','45')
+% set_param('untitled.slx/mem_pneum_res1','mem_rad','8')
+% set_param('untitled.slx/mem_pneum_res1','mem_thick','50')
+% set_param('untitled.slx/mem_pneum_res1','init_stress','0')
+% set_param('untitled.slx/mem_pneum_res1','theta','pi/4')
+
+
 simOut = sim('untitled.slx');
-runCount = Simulink.sdi.getRunCount();
+% runCount = Simulink.sdi.getRunCount();
 runnn = Simulink.sdi.getAllRunIDs();
 % runID = Simulink.sdi.getRun(runCount);
-Simulink.sdi.exportRun(runnn(runCount));
-close_system('./C_uF_lumped_MATLAB/C_uF_lib.slx.slx',0);
-close_system('./C_uF_lumped_MATLAB/untitled.slx',0);
+Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx');
+%export(runnn(runCount));
+close_system('./C_uF_lib.slx',0);
+close_system('./untitled.slx',0);
