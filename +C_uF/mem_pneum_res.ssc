@@ -39,12 +39,14 @@ component mem_pneum_res
         OutRad = {20,'mm'}; %Outer Radius
         mem_rad = {8,'mm'}; %Radius of membrane
         mem_thick = {50,'um'}; %Membrane thickness
-        Bi_modulus = {2307692.307692308,'Pa'}; %Biaxial modulus
         init_stress = {620000,'Pa'}; %Initial stress of membrane
+	Young = {2000000,'Pa'}; %Young's Modulus
+	Poisson = {0.5,'1'}; %Poisson's ratio
         theta = {pi/2,'1'}; %Contact angle
     end
     parameters (Access = private)
         p0 = {101325,'Pa'};
+        Bi_modulus = {0,'Pa'}; %Biaxial modulus
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
         w = {0,'mm'}; %Width
@@ -56,8 +58,9 @@ component mem_pneum_res
     function setup
         across(p,I.p);
         through(q,I.q);
+	Bi_modulus = Young/(1-Poisson);
         w = 2*pi*InRad*anglength/360;
-        Area = anglength*(pi/360)*(OutRad^2-InRad^2)
+        Area = anglength*(pi/360)*(OutRad^2-InRad^2);
         V_total = Area*d;
         if init_fill >=1
             fill = 1;

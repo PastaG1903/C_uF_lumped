@@ -40,17 +40,19 @@ set_param('untitled/mem_pneum_res1','d','4.04')
 set_param('untitled/mem_pneum_res1','anglength','160')
 set_param('untitled/mem_pneum_res1','InRad','15')
 set_param('untitled/mem_pneum_res1','OutRad','45')
-set_param('untitled/mem_pneum_res1','mem_rad','8')
+set_param('untitled/mem_pneum_res1','mem_rad','19')
 set_param('untitled/mem_pneum_res1','mem_thick','50')
 set_param('untitled/mem_pneum_res1','init_stress','0')
 set_param('untitled/mem_pneum_res1','theta','pi/4')
+set_param('untitled/mem_pneum_res1','Young','2000000')
+set_param('untitled/mem_pneum_res1','Poisson','0.5')
 
 
 simOut = sim('untitled.slx');
 % runCount = Simulink.sdi.getRunCount();
 runnn = Simulink.sdi.getAllRunIDs();
 % runID = Simulink.sdi.getRun(runCount);
-Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx','Signals','mem_pneum_res1/V_liquid');
+Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx');
 %export(runnn(runCount));
 close_system('./C_uF_lib.slx',0);
 close_system('./untitled.slx',0);
