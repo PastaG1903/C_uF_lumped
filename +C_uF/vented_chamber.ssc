@@ -24,6 +24,7 @@ component vented_chamber
         p_Euler = {0,'Pa'};
         V_liquid = {0,'mm^3'};
         fill = {0,'1'};
+        p_cap = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -32,6 +33,7 @@ component vented_chamber
         anglength = {0,'1'}; %Angle of aperture
         InRad = {10,'mm'}; %Inner Radius
         OutRad = {10,'mm'}; %Outer Radius
+	theta = {pi/2,'1'}; %Contact angle
     end
     parameters (Access = private)
         Area = {0,'mm^2'};
@@ -40,6 +42,7 @@ component vented_chamber
         p0 = {101325,'Pa'};
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
+	gamma_lg = {0.07275,'Pa*m'};
     end
     function setup
         across(p,I.p,[]);
@@ -77,8 +80,11 @@ component vented_chamber
                     p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*InRad)*f_dot*(fill/Euler_fill)-p_Euler);
                 end
             end
+            p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
+
         else
             p_Euler.der == -EP*p_Euler;
+	    p_cap == 0;
         end
 
         if (fill>0) && (revIn<0) && (q<0)
@@ -99,6 +105,6 @@ component vented_chamber
             out == -1;
         end
 
-        p + p_cent + p_Euler == 0;
+        p + p_cent + p_Euler == p_cap;
     end
 end

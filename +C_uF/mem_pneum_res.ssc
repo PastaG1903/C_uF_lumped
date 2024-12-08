@@ -121,7 +121,7 @@ component mem_pneum_res
             revOut == -1;
         end
 
-        p + p_Euler + p_cap  + p_cent == p_mem;
+        p + p_Euler + p_cent + p_cap == p_mem;
 
     end
 end
