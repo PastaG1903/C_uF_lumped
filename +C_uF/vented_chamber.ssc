@@ -18,13 +18,14 @@ component vented_chamber
     variables
         p = {0,'Pa'};
         q = {0,'mm^3/s'};
+        q_dot = {0, 'mm^3/s^2'};
         h_liquid = {0,'mm'};
         p_cent = {0,'Pa'};
         f_dot = {0,'Hz/s'};
         p_Euler = {0,'Pa'};
         V_liquid = {0,'mm^3'};
         fill = {0,'1'};
-        p_cap = {0,'Pa'};
+        p_IRRF = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -33,7 +34,6 @@ component vented_chamber
         anglength = {0,'1'}; %Angle of aperture
         InRad = {10,'mm'}; %Inner Radius
         OutRad = {10,'mm'}; %Outer Radius
-	theta = {pi/2,'1'}; %Contact angle
     end
     parameters (Access = private)
         Area = {0,'mm^2'};
@@ -42,13 +42,16 @@ component vented_chamber
         p0 = {101325,'Pa'};
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
-	gamma_lg = {0.07275,'Pa*m'};
+        fluidic_res_liq = {0,'Pa*s/mm^3'};
+        fluidic_res_air = {0,'Pa*s/mm^3'};
     end
     function setup
         across(p,I.p,[]);
         through(q,I.q,[]);
         w = 2*pi*InRad*anglength/360;
-        Area = anglength*(pi/360)*(OutRad^2-InRad^2)
+        Area = anglength*(pi/360)*(OutRad^2-InRad^2);
+        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
         if init_fill >=1
             fill = 1;
@@ -63,8 +66,10 @@ component vented_chamber
     end
     equations
         fill == V_liquid/V_total;
+        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/Area;
+        q.der == q_dot;
         f.der == f_dot;
-        h_liquid == sqrt(OutRad^2-V_liquid*360/d/anglength/pi);
+        h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(OutRad-(-h_liquid+InRad+OutRad))^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
         if V_liquid > 0
             if f_dot > 0
@@ -80,11 +85,9 @@ component vented_chamber
                     p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*InRad)*f_dot*(fill/Euler_fill)-p_Euler);
                 end
             end
-            p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
 
         else
             p_Euler.der == -EP*p_Euler;
-	    p_cap == 0;
         end
 
         if (fill>0) && (revIn<0) && (q<0)
@@ -105,6 +108,7 @@ component vented_chamber
             out == -1;
         end
 
-        p + p_cent + p_Euler == p_cap;
+        p + p_cent + p_Euler == p_IRRF;
+
     end
 end

@@ -17,6 +17,7 @@ component mem_pneum_res
     end
     variables
         p = {0,'Pa'};
+        q_dot = {0, 'mm^3/s^2'};
         q = {0,'mm^3/s'};
         h_liquid = {0,'mm'};
         p_cent = {0,'Pa'};
@@ -24,11 +25,10 @@ component mem_pneum_res
         p_Euler = {0,'Pa'};
         V_liquid = {0,'mm^3'};
         fill = {0,'1'};
-        % p_pneum = {0,'Pa'};
+        % p_cap = {0,'Pa'};
         V_change = {0,'mm^3'};
         p_mem = {0,'Pa'};
-        p_cap = {0,'Pa'};
-        % b_height = {0,'mm'};
+        p_IRRF = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -40,9 +40,9 @@ component mem_pneum_res
         mem_rad = {8,'mm'}; %Radius of membrane
         mem_thick = {50,'um'}; %Membrane thickness
         init_stress = {620000,'Pa'}; %Initial stress of membrane
-	Young = {2000000,'Pa'}; %Young's Modulus
-	Poisson = {0.5,'1'}; %Poisson's ratio
-        theta = {pi/2,'1'}; %Contact angle
+        Young = {2000000,'Pa'}; %Young's Modulus
+        Poisson = {0.5,'1'}; %Poisson's ratio
+        % theta = {pi/2,'1'}; %Contact angle
     end
     parameters (Access = private)
         p0 = {101325,'Pa'};
@@ -53,14 +53,18 @@ component mem_pneum_res
         V_total = {0,'mm^3'};
         Area = {1,'mm^2'};
         p_vap = {2329.575349457,'Pa'};
-        gamma_lg = {0.07275,'Pa*m'};
+        fluidic_res_liq = {0,'Pa*s/mm^3'};
+        fluidic_res_air = {0,'Pa*s/mm^3'};
+        % gamma_lg = {0.07275,'Pa*m'};
     end
     function setup
         across(p,I.p);
         through(q,I.q);
-	Bi_modulus = Young/(1-Poisson);
+        Bi_modulus = Young/(1-Poisson);
         w = 2*pi*InRad*anglength/360;
         Area = anglength*(pi/360)*(OutRad^2-InRad^2);
+        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
         if init_fill >=1
             fill = 1;
@@ -75,10 +79,12 @@ component mem_pneum_res
     end
     equations
         fill == V_liquid/V_total;
+        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/Area;
+        q.der == q_dot;
         f.der == f_dot;
         h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(OutRad-(h_liquid))^2)*(2*pi*f)^2 + 0.5*I.density_gas*((InRad+h_liquid)^2-InRad^2)*(2*pi*f)^2;
-        p_mem == 4*init_stress*mem_thick*(2*V_change/(pi*mem_rad^2))/mem_rad^2 + (8/3)*0.8*Bi_modulus*mem_thick*(2*V_change/(pi*mem_rad^2))^3/mem_rad^4;
+        p_mem == 4*init_stress*mem_thick*(2*V_change/(pi*mem_rad^4)) + (8/3)*Bi_modulus*mem_thick*(8*V_change^3/(pi^3*mem_rad^12));
         V_change == V_liquid;
         % p_pneum == p0*((V_total+V_change)/((V_total+V_change)-V_liquid))-p0 ;
         if V_liquid > 0
@@ -96,11 +102,11 @@ component mem_pneum_res
                     p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*OutRad)*f_dot*(fill/Euler_fill)-p_Euler);
                 end
             end
-            p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
+            % p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
         else
             % p_pneum == p0*(V_total/(V_total-V_liquid))-p0;
             p_Euler.der == -EP*p_Euler;
-            p_cap == 0;
+            % p_cap == 0;
         end
         
         if (inp>1) && (fill<1) && (q>0)
@@ -121,7 +127,7 @@ component mem_pneum_res
             revOut == -1;
         end
 
-        p + p_Euler + p_cent + p_cap == p_mem;
+        p + p_Euler + p_cent == p_mem + p_IRRF;
 
     end
 end
