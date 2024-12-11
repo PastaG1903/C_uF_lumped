@@ -35,8 +35,8 @@ component n_radial_channel
         wet = {0,'1'};
     end
     parameters
-        w = {106, 'um'}; %Width
-        d = {100, 'um'}; %Depth
+        w = {106, 'mm'}; %Width
+        d = {100, 'mm'}; %Depth
         r_in = {20, 'mm'}; %Distance to inlet
         r_out = {30, 'mm'}; %Distance to outlet
         init_fill = {0, '1'}; %Initial fill level

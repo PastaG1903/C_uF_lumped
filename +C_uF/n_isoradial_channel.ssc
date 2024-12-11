@@ -36,8 +36,8 @@ component n_isoradial_channel
         wet = {0,'1'};
     end
     parameters
-        w = {106, 'um'}; %Width
-        d = {100, 'um'}; %Depth
+        w = {106, 'mm'}; %Width
+        d = {100, 'mm'}; %Depth
         anglength = {100,'1'}; %Aperture angle
         r = {20, 'mm'}; %Radial distance to channel
         init_fill = {0, '1'}; %Initial fill level
