@@ -10,27 +10,28 @@ load_system('untitled.slx');
 % MODEL PARAMETERS
 
 set_param('untitled','Decimation','100');
-set_param('untitled','FixedStep','0.01');
+set_param('untitled','FixedStep','0.0005');
+set_param('untitled','StopTime','80')
 set_param('untitled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/10-10.mat');
 
 % VENTED CHAMBER
-set_param('untitled/vented_chamber','init_fill','0.99');
+set_param('untitled/vented_chamber','init_fill','1');
 set_param('untitled/vented_chamber','d','4.04');
 set_param('untitled/vented_chamber','anglength','160');
 set_param('untitled/vented_chamber','InRad','15');
 set_param('untitled/vented_chamber','OutRad','45');
 
 % RADIAL CHANNEL
-set_param('untitled/n_radial_channel','w','0.5'); % in um
-set_param('untitled/n_radial_channel','d','4'); % in um
+set_param('untitled/n_radial_channel','w','0.5'); % in mm
+set_param('untitled/n_radial_channel','d','4'); % in mm
 set_param('untitled/n_radial_channel','r_in','45');
 set_param('untitled/n_radial_channel','r_out','62');
 set_param('untitled/n_radial_channel','init_fill','0');
 set_param('untitled/n_radial_channel','theta','pi/4');
 
 % ISORADIAL CHANNEL
-set_param('untitled/n_isoradial_channel','w','0.5'); % in um
-set_param('untitled/n_isoradial_channel','d','4'); % in um
+set_param('untitled/n_isoradial_channel','w','0.5'); % in mm
+set_param('untitled/n_isoradial_channel','d','4'); % in mm
 set_param('untitled/n_isoradial_channel','anglength','45');
 set_param('untitled/n_isoradial_channel','r','62');
 set_param('untitled/n_isoradial_channel','init_fill','0');
@@ -44,7 +45,7 @@ set_param('untitled/mem_pneum_res1','anglength','160'); %°
 set_param('untitled/mem_pneum_res1','InRad','45'); %mm
 set_param('untitled/mem_pneum_res1','OutRad','62'); %mm
 set_param('untitled/mem_pneum_res1','mem_rad','26'); %mm
-set_param('untitled/mem_pneum_res1','mem_thick','80'); %um
+set_param('untitled/mem_pneum_res1','mem_thick','80'); %um THIS IS THE ONLY VALUE IN MICRONS
 set_param('untitled/mem_pneum_res1','init_stress','125000'); %Pa
 set_param('untitled/mem_pneum_res1','Young','6000000'); %Pa
 set_param('untitled/mem_pneum_res1','Poisson','0.63');

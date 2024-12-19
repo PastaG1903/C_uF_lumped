@@ -18,14 +18,14 @@ component vented_chamber
     variables
         p = {0,'Pa'};
         q = {0,'mm^3/s'};
-        q_dot = {0, 'mm^3/s^2'};
+        % q_dot = {0, 'mm^3/s^2'};
         h_liquid = {0,'mm'};
         p_cent = {0,'Pa'};
         f_dot = {0,'Hz/s'};
         p_Euler = {0,'Pa'};
         V_liquid = {0,'mm^3'};
         fill = {0,'1'};
-        p_IRRF = {0,'Pa'};
+        % p_IRRF = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -42,16 +42,16 @@ component vented_chamber
         p0 = {101325,'Pa'};
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
-        fluidic_res_liq = {0,'Pa*s/mm^3'};
-        fluidic_res_air = {0,'Pa*s/mm^3'};
+        % fluidic_res_liq = {0,'Pa*s/mm^3'};
+        % fluidic_res_air = {0,'Pa*s/mm^3'};
     end
     function setup
         across(p,I.p,[]);
         through(q,I.q,[]);
         w = 2*pi*InRad*anglength/360;
         Area = anglength*(pi/360)*(OutRad^2-InRad^2);
-        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
-        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
+        % fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        % fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
         if init_fill >=1
             fill = 1;
@@ -66,8 +66,8 @@ component vented_chamber
     end
     equations
         fill == V_liquid/V_total;
-        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/Area;
-        q.der == q_dot;
+        % p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
+        % q.der == q_dot;
         f.der == f_dot;
         h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
@@ -90,15 +90,15 @@ component vented_chamber
             p_Euler.der == -EP*p_Euler;
         end
 
-        if (fill>0) && (revIn<0) && (q>0)
+        if (fill>0) && (revIn<0) && (q<0)
             % emptying
             V_liquid.der == -abs(q);
             out == 2;
-        elseif (fill<=0) && ((q>0) || ((q<0) && (revIn<0)))
+        elseif (fill<=0) && ((q<0) || ((q>0) && (revIn<0)))
             % continuous empty
             V_liquid.der == 0;
             out == -1;
-        elseif (fill<1) && (revIn>1) && (q<0)
+        elseif (fill<1) && (revIn>1) && (q>0)
             % filling
 	          V_liquid.der == abs(q);
             out == -1;
@@ -108,7 +108,7 @@ component vented_chamber
             out == -1;
         end
 
-        p + p_cent + p_Euler == p_IRRF;
+        p - p_cent - p_Euler == 0;
 
     end
 end

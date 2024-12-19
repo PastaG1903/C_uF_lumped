@@ -114,84 +114,40 @@ component n_radial_channel
             InO == 2;
 
         % CONDITIONS FROM INLET
-        elseif (InO>1) && (fill<1) && (q<0) && (inlet>1)
+        elseif (InO>1) && (fill<1) && (q>0) && (inlet>1)
             % starts filling
             V_liquid.der == abs(q);
             outlet == -1;
             wet == 2;
             revOut == -1;
             InO == 2;
-        elseif (InO>1) && (fill>0) && (inlet>1) && (q<0) && (fill<1)
+        elseif (InO>1) && (fill>0) && (inlet>1) && (q>0) && (fill<1)
             % volume changes filling
             V_liquid.der == abs(q);
             outlet == -1;
             wet == 2;
             revOut == -1;
             InO == 2;
-        elseif (InO>1) && (fill>=1) && (q<0) && (inlet>1)
+        elseif (InO>1) && (fill>=1) && (q>0) && (inlet>1)
             % last moment filling
             V_liquid.der == 0;
             outlet == 2;
             wet == 2;
             revOut == -1;
             InO == 2;
-        elseif (InO>1) && (fill>=1) && (inlet<0) && (q<0) && (revIn<0)
+        elseif (InO>1) && (fill>=1) && (inlet<0) && (q>0) && (revIn<0)
             % starts defilling
             V_liquid.der == -abs(q);
             outlet == 2;
             wet == 2;
             revOut == -1;
             InO == 2;
-        elseif (InO>1) && (fill>0) && (fill<1) && (q<0) && (inlet<0) && (revIn<0)
+        elseif (InO>1) && (fill>0) && (fill<1) && (q>0) && (inlet<0) && (revIn<0)
             % volume changes defilling
             V_liquid.der == -abs(q);
             outlet == 2;
             wet == 2;
             revOut == -1;
-            InO == 2;
-        elseif (InO>1) && (fill<=0) && (q<0) && (inlet<0) && (revIn<0)
-            % last moment defilling
-            V_liquid.der == 0;
-            outlet == -1;
-            wet == -1;
-            revOut == -1;
-            InO == 2;
-
-        %CONDITIONS FROM OUTLET
-        elseif (InO>1) && (fill<1) && (q>0) && (revIn>1)
-            % starts filling
-            V_liquid.der == abs(q);
-            outlet == -1;
-            wet == 2;
-            revOut == -1;
-            InO == 2;
-        elseif (InO>1) && (fill>0) && (revIn>1) && (q>0) && (fill<1)
-            % volume changes filling
-            V_liquid.der == abs(q);
-            outlet == -1;
-            wet == 2;
-            revOut == -1
-            InO == 2;
-        elseif (InO>1) && (fill>=1) && (q>0) && (revIn>1)
-            % last moment filling
-            V_liquid.der == 0;
-            outlet == -1;
-            wet == 2;
-            revOut == 2;
-            InO == 2;
-        elseif (InO>1) && (fill>=1) && (revIn<0) && (q>0)
-            % starts defilling
-            V_liquid.der == -abs(q);
-            outlet == -1;
-            wet == 2;
-            revOut == 2;
-            InO == 2;
-        elseif (InO>1) && (fill>0) && (fill<1) && (q>0) && (revIn<0)
-            % volume changes defilling
-            V_liquid.der == -abs(q);
-            outlet == -1;
-            wet == 2;
-            revOut == 2;
             InO == 2;
         elseif (InO>1) && (fill<=0) && (q>0) && (inlet<0) && (revIn<0)
             % last moment defilling
@@ -200,16 +156,60 @@ component n_radial_channel
             wet == -1;
             revOut == -1;
             InO == 2;
+
+        %CONDITIONS FROM OUTLET
+        elseif (InO>1) && (fill<1) && (q<0) && (revIn>1)
+            % starts filling
+            V_liquid.der == abs(q);
+            outlet == -1;
+            wet == 2;
+            revOut == -1;
+            InO == 2;
+        elseif (InO>1) && (fill>0) && (revIn>1) && (q<0) && (fill<1)
+            % volume changes filling
+            V_liquid.der == abs(q);
+            outlet == -1;
+            wet == 2;
+            revOut == -1
+            InO == 2;
+        elseif (InO>1) && (fill>=1) && (q<0) && (revIn>1)
+            % last moment filling
+            V_liquid.der == 0;
+            outlet == -1;
+            wet == 2;
+            revOut == 2;
+            InO == 2;
+        elseif (InO>1) && (fill>=1) && (revIn<0) && (q<0)
+            % starts defilling
+            V_liquid.der == -abs(q);
+            outlet == -1;
+            wet == 2;
+            revOut == 2;
+            InO == 2;
+        elseif (InO>1) && (fill>0) && (fill<1) && (q<0) && (revIn<0)
+            % volume changes defilling
+            V_liquid.der == -abs(q);
+            outlet == -1;
+            wet == 2;
+            revOut == 2;
+            InO == 2;
+        elseif (InO>1) && (fill<=0) && (q<0) && (inlet<0) && (revIn<0)
+            % last moment defilling
+            V_liquid.der == 0;
+            outlet == -1;
+            wet == -1;
+            revOut == -1;
+            InO == 2;
         % CONTINUOUS CONDITIONS
-        elseif (InO>1) && (fill>=1) && (((inlet>1) && (q<0)) || ((revIn>1) && (q>0)))
+        elseif (InO>1) && (fill>=1) && (((inlet>1) && (q>0)) || ((revIn>1) && (q<0)))
             % full
             V_liquid.der == 0;
             wet == 2;
             InO == 2;
-            if ((inlet>1) && (q<0))
+            if ((inlet>1) && (q>0))
                 outlet == 2;
                 revOut == -1;
-            elseif ((revIn>1) && (q>0))
+            elseif ((revIn>1) && (q<0))
                 outlet == -1;
                 revOut == 2;
             else
@@ -264,7 +264,11 @@ component n_radial_channel
         % else
           % p + p_cent + p_cap == p_IRRF + p_visc;
         % end
-        
-        p + p_cent + p_cap == p_IRRF + p_visc;
+
+        if inlet>1 && revIn<0
+          p + p_cent + p_cap == p_IRRF + p_visc;
+        else
+          p + p_cent - p_cap == p_IRRF + p_visc;
+        end
     end
 end

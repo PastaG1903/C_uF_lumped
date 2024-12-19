@@ -17,7 +17,7 @@ component mem_pneum_res
     end
     variables
         p = {0,'Pa'};
-        q_dot = {0, 'mm^3/s^2'};
+        % q_dot = {0, 'mm^3/s^2'};
         q = {0,'mm^3/s'};
         h_liquid = {0,'mm'};
         p_cent = {0,'Pa'};
@@ -28,7 +28,7 @@ component mem_pneum_res
         % p_cap = {0,'Pa'};
         V_change = {0,'mm^3'};
         p_mem = {0,'Pa'};
-        p_IRRF = {0,'Pa'};
+        % p_IRRF = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -53,8 +53,8 @@ component mem_pneum_res
         V_total = {0,'mm^3'};
         Area = {1,'mm^2'};
         p_vap = {2329.575349457,'Pa'};
-        fluidic_res_liq = {0,'Pa*s/mm^3'};
-        fluidic_res_air = {0,'Pa*s/mm^3'};
+        % fluidic_res_liq = {0,'Pa*s/mm^3'};
+        % fluidic_res_air = {0,'Pa*s/mm^3'};
         % gamma_lg = {0.07275,'Pa*m'};
     end
     function setup
@@ -63,8 +63,8 @@ component mem_pneum_res
         Bi_modulus = Young/(1-Poisson);
         w = 2*pi*InRad*anglength/360;
         Area = anglength*(pi/360)*(OutRad^2-InRad^2);
-        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
-        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
+        % fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        % fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
         if init_fill >=1
             fill = 1;
@@ -79,8 +79,8 @@ component mem_pneum_res
     end
     equations
         fill == V_liquid/V_total;
-        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/Area;
-        q.der == q_dot;
+        % p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
+        % q.der == q_dot;
         f.der == f_dot;
         h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
@@ -108,16 +108,16 @@ component mem_pneum_res
             p_Euler.der == -EP*p_Euler;
             % p_cap == 0;
         end
-        
-        if (inp>1) && (fill<1) && (q<0)
+
+        if (inp>1) && (fill<1) && (q>0)
             % filling
             V_liquid.der == abs(q);
             revOut == -1;
-        elseif (inp>1) && (fill>=1) && (q<0)
+        elseif (inp>1) && (fill>=1) && (q>0)
             % filled
             V_liquid.der == 0;
             revOut == -1;
-        elseif (fill>0) && (q>0)
+        elseif (fill>0) && (q<0)
             % defilling
             V_liquid.der == -abs(q);
             revOut == 2;
@@ -127,7 +127,9 @@ component mem_pneum_res
             revOut == -1;
         end
 
-        p + p_Euler + p_cent == p_mem + p_IRRF;
+        % p + p_Euler + p_cent == p_mem + p_IRRF;
+        p + p_Euler + p_cent == p_mem;
+        % p + p_Euler == p_mem + p_cent ;
 
     end
 end
