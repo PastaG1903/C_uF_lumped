@@ -259,11 +259,6 @@ component n_radial_channel
                 p_cent == O.density/2*(2*pi*f)^2*((r_out+l*fill)^2-r_out^2) + O.density_gas/2*(2*pi*f)^2*(r_in^2-(r_out+l*fill)^2);
             end
         end
-        % if revIn > 0
-          % p + p_cent + p_IRRF + p_visc == p_cap;
-        % else
-          % p + p_cent + p_cap == p_IRRF + p_visc;
-        % end
 
         if inlet>1 && revIn<0
           p + p_cent + p_cap == p_IRRF + p_visc;
