@@ -12,7 +12,10 @@ load_system('untitled.slx');
 set_param('untitled','Decimation','100000');
 set_param('untitled','FixedStep','0.0005');
 set_param('untitled','StopTime','15')
-set_param('untitled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/10-10.mat');
+set_param('untitled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/linear_inc.mat');
+set_param('untitled/Signal Editor','OutputAfterFinalValue','Extrapolation');
+% set_param('untitled/Signal Editor','OutputAfterFinalValue','Holding final value');
+% set_param('untitled/Signal Editor','OutputAfterFinalValue','Setting to zero');
 set_param('untitled/Signal Editor','SampleTime','0.0005')
 
 % VENTED CHAMBER
@@ -46,13 +49,13 @@ set_param('untitled/mem_pneum_res1','d','4.04'); %mm
 set_param('untitled/mem_pneum_res1','anglength','160'); %°
 set_param('untitled/mem_pneum_res1','InRad','45'); %mm
 set_param('untitled/mem_pneum_res1','OutRad','62'); %mm
-set_param('untitled/mem_pneum_res1','mem_rad','13'); %mm
+set_param('untitled/mem_pneum_res1','mem_rad','15'); %mm
 set_param('untitled/mem_pneum_res1','mem_thick','80'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('untitled/mem_pneum_res1','init_stress','225000'); %Pa
+set_param('untitled/mem_pneum_res1','init_stress','125000'); %Pa
 set_param('untitled/mem_pneum_res1','Young','6000000'); %Pa
 set_param('untitled/mem_pneum_res1','Poisson','0.63');
 set_param('untitled/mem_pneum_res1','theta','0');
-set_param('untitled/mem_pneum_res1','mem_num','2'); %please don't make this 0
+set_param('untitled/mem_pneum_res1','mem_num','3'); %please don't make this 0
 
 
 simOut = sim('untitled.slx');
