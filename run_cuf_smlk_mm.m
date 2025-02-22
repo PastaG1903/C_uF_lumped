@@ -6,9 +6,9 @@ load_system('untitled.slx');
 
 % MODEL PARAMETERS
 
-set_param('untitled','Decimation','100000');
+set_param('untitled','Decimation','1000000');
 set_param('untitled','FixedStep','0.0005');
-set_param('untitled','StopTime','130');
+set_param('untitled','StopTime','20');
 set_param('untitled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/20-20.mat');
 
 % set_param('untitled/Signal Editor','OutputAfterFinalValue','Extrapolation');
@@ -52,21 +52,21 @@ set_param('untitled/multi_mem_res','OutRad','62'); %mm
 %   Membrane 1
 set_param('untitled/multi_mem_res','mem_rad_1','22'); %mm
 set_param('untitled/multi_mem_res','mem_thick_1','80'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('untitled/multi_mem_res','init_stress_1','100000'); %Pa
+set_param('untitled/multi_mem_res','init_stress_1','233000'); %Pa
 set_param('untitled/multi_mem_res','Young_1','9800000'); %Pa
 set_param('untitled/multi_mem_res','Poisson_1','0.01');
 
 %   Membrane 2
 set_param('untitled/multi_mem_res','mem_rad_2','22'); %mm
 set_param('untitled/multi_mem_res','mem_thick_2','80'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('untitled/multi_mem_res','init_stress_2','100000'); %Pa
+set_param('untitled/multi_mem_res','init_stress_2','233000'); %Pa
 set_param('untitled/multi_mem_res','Young_2','9800000'); %Pa
 set_param('untitled/multi_mem_res','Poisson_2','0.01');
 
 %   Membrane 3
 set_param('untitled/multi_mem_res','mem_rad_3','22'); %mm
 set_param('untitled/multi_mem_res','mem_thick_3','80'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('untitled/multi_mem_res','init_stress_3','100000'); %Pa
+set_param('untitled/multi_mem_res','init_stress_3','233000'); %Pa
 set_param('untitled/multi_mem_res','Young_3','9800000'); %Pa
 set_param('untitled/multi_mem_res','Poisson_3','0.01');
 
