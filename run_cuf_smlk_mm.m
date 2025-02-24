@@ -48,29 +48,29 @@ set_param('titled/multi_mem_res','d','4.04'); %mm
 set_param('titled/multi_mem_res','anglength','160'); %°
 set_param('titled/multi_mem_res','InRad','45'); %mm
 set_param('titled/multi_mem_res','OutRad','62'); %mm
+set_param('titled/multi_mem_res','theta','pi/2');
 
 %   Membrane 1
 set_param('titled/multi_mem_res','mem_rad_1','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_1','100'); %um THIS IS THE ONLY VALUE IN MICRONS
 set_param('titled/multi_mem_res','init_stress_1','233333'); %Pa
 set_param('titled/multi_mem_res','Young_1','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_1','0.01');
+set_param('titled/multi_mem_res','Poisson_1','0.1');
 
 %   Membrane 2
 set_param('titled/multi_mem_res','mem_rad_2','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_2','100'); %um THIS IS THE ONLY VALUE IN MICRONS
 set_param('titled/multi_mem_res','init_stress_2','233333'); %Pa
 set_param('titled/multi_mem_res','Young_2','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_2','0.01');
+set_param('titled/multi_mem_res','Poisson_2','0.1');
 
 %   Membrane 3
 set_param('titled/multi_mem_res','mem_rad_3','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_3','100'); %um THIS IS THE ONLY VALUE IN MICRONS
 set_param('titled/multi_mem_res','init_stress_3','233333'); %Pa
 set_param('titled/multi_mem_res','Young_3','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_3','0.01');
+set_param('titled/multi_mem_res','Poisson_3','0.1');
 
-set_param('titled/multi_mem_res','theta','pi/2');
 
 simOut = sim('titled.slx');
 % runCount = Simulink.sdi.getRunCount();
@@ -78,6 +78,6 @@ runnn = Simulink.sdi.getAllRunIDs();
 % runID = Simulink.sdi.getRun(runCount);
 Simulink.sdi.exportRun(runnn(end),'to','file','filename','sdi_export.xlsx');
 %export(runnn(runCount));
-save_system('titled.slx');
+save_system('titled.slx',1);
 close_system('titled.slx',1);
 close_system('C_uF_lib.slx',0);
