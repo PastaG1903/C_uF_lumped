@@ -111,7 +111,6 @@ component multi_mem_res
         V_change_1 + V_change_2 + V_change_3 == V_liquid;
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
         if V_liquid > 0
-            % p_pneum == p0*((V_total)/((V_total)-V_liquid))-p0 ;
             if f_dot > 0
                 if fill > Euler_fill
                     p_Euler.der == EP*(-(G-1)*0.5*(I.density*w*2*pi*OutRad)*f_dot-p_Euler);
@@ -127,7 +126,6 @@ component multi_mem_res
             end
             p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
         else
-            % p_pneum == p0*(V_total/(V_total-V_liquid))-p0;
             p_Euler.der == -EP*p_Euler;
             p_cap == 0;
         end
