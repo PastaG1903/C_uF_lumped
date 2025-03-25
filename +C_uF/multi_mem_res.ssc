@@ -116,7 +116,7 @@ component multi_mem_res
 
         V_change_1 + V_change_2 + V_change_3 == V_real;
 
-        V_real == V_total*(1 - exp(-time*f/124));
+        V_real == V_total*(1 - exp(-time*f/119))^1.1;
 
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
         if V_liquid > 0
