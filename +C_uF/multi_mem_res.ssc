@@ -34,6 +34,8 @@ component multi_mem_res
         p_mem_3 = {0,'Pa'};
         p_visc = {0,'Pa'};
         p_IRRF = {0,'Pa'};
+        V_real = {0,'mm^3'};
+        p_mem_t = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -73,6 +75,8 @@ component multi_mem_res
         fluidic_res_liq = {0,'Pa*s/mm^3'};
         fluidic_res_air = {0,'Pa*s/mm^3'};
         gamma_lg = {0.07275,'Pa*m'};
+        epsilon = {10^-9,'Hz'};
+        C = {1,'Hz'};
     end
     function setup
         across(p,I.p);
@@ -108,7 +112,12 @@ component multi_mem_res
         p_mem_3 == 4*init_stress_3*mem_thick_3*(2*V_change_3/(pi*mem_rad_3^4)) + ((8*(1.015-0.247*Poisson_3))/3)*Bi_modulus_3*mem_thick_3*(8*V_change_3^3/(pi^3*mem_rad_3^10));
         p_mem_1 == p_mem_2;
         p_mem_2 == p_mem_3;
-        V_change_1 + V_change_2 + V_change_3 == V_liquid;
+        p_mem_t == p_mem_1 + p_mem_2 + p_mem_3;
+
+        V_change_1 + V_change_2 + V_change_3 == V_real;
+
+        V_real == V_total*(1 - exp(-time*f/123))^1.06;
+
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
         if V_liquid > 0
             if f_dot > 0
@@ -148,7 +157,7 @@ component multi_mem_res
             revOut == -1;
         end
 
-        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem_1 + p_mem_2 + p_mem_3;
+        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem_t;
 
     end
 end

@@ -8,7 +8,7 @@ load_system('titled.slx');
 
 set_param('titled','Decimation','1000000');
 set_param('titled','FixedStep','0.0005');
-set_param('titled','StopTime','30');
+set_param('titled','StopTime','15');
 set_param('titled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/real_repro.mat');
 
 % set_param('titled/Signal Editor','OutputAfterFinalValue','Extrapolation');
@@ -55,23 +55,23 @@ set_param('titled/multi_mem_res','G','1'); %1 when flow is opposite to the direc
 %   Membrane 1
 set_param('titled/multi_mem_res','mem_rad_1','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_1','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_1','116666'); %Pa
+set_param('titled/multi_mem_res','init_stress_1','933333'); %Pa
 set_param('titled/multi_mem_res','Young_1','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_1','0.1');
+set_param('titled/multi_mem_res','Poisson_1','0.01');
 
 %   Membrane 2
 set_param('titled/multi_mem_res','mem_rad_2','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_2','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_2','116666'); %Pa
+set_param('titled/multi_mem_res','init_stress_2','933333'); %Pa
 set_param('titled/multi_mem_res','Young_2','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_2','0.1');
+set_param('titled/multi_mem_res','Poisson_2','0.01');
 
 %   Membrane 3
 set_param('titled/multi_mem_res','mem_rad_3','21'); %mm
 set_param('titled/multi_mem_res','mem_thick_3','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_3','116666'); %Pa
+set_param('titled/multi_mem_res','init_stress_3','933333'); %Pa
 set_param('titled/multi_mem_res','Young_3','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_3','0.1');
+set_param('titled/multi_mem_res','Poisson_3','0.01');
 
 
 simOut = sim('titled.slx');
