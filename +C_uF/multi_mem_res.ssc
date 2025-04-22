@@ -86,8 +86,8 @@ component multi_mem_res
         Bi_modulus_3 = Young_3/(1-Poisson_3);
         w = 2*pi*InRad*anglength/360;
         Area = anglength*(pi/360)*(OutRad^2-InRad^2);
-        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
-        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
+        fluidic_res_liq = 12*I.viscosity*(OutRad-InRad)/(w*d^3*(1-192/(pi^5)*d/w*(tanh(pi*w/2/d)+31/32*1.0369)-1));
+        fluidic_res_air = 12*I.viscosity_air*(OutRad-InRad)/(w*d^3*(1-192/(pi^5)*d/w*(tanh(pi*w/2/d)+31/32*1.0369)-1));
         V_total = Area*d;
         if init_fill >=1
             fill = 1;
@@ -101,11 +101,11 @@ component multi_mem_res
         end
     end
     equations
-        fill == V_liquid/V_total;
+        fill == V_real/V_total;
         p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
         q.der == q_dot;
         f.der == f_dot;
-        h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
+        h_liquid == sqrt(abs(OutRad^2-V_real*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
         p_mem_1 == 4*init_stress_1*mem_thick_1*(2*V_change_1/(pi*mem_rad_1^4)) + ((8*(1.015-0.247*Poisson_1))/3)*Bi_modulus_1*mem_thick_1*(8*V_change_1^3/(pi^3*mem_rad_1^10));
         p_mem_2 == 4*init_stress_2*mem_thick_2*(2*V_change_2/(pi*mem_rad_2^4)) + ((8*(1.015-0.247*Poisson_2))/3)*Bi_modulus_2*mem_thick_2*(8*V_change_2^3/(pi^3*mem_rad_2^10));
