@@ -8,8 +8,8 @@ load_system('untitled.slx');
 
 set_param('untitled','Decimation','100000');
 set_param('untitled','FixedStep','0.0005');
-set_param('untitled','StopTime','130');
-set_param('untitled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/20-20.mat');
+set_param('untitled','StopTime','50');
+set_param('untitled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/20-20.mat');
 
 % set_param('untitled/Signal Editor','OutputAfterFinalValue','Extrapolation');
 set_param('untitled/Signal Editor','OutputAfterFinalValue','Holding final value');
@@ -19,40 +19,40 @@ set_param('untitled/Signal Editor','SampleTime','0.0005');
 
 % VENTED CHAMBER
 set_param('untitled/vented_chamber','init_fill','1');
-set_param('untitled/vented_chamber','d','4.04');
-set_param('untitled/vented_chamber','anglength','160');
+set_param('untitled/vented_chamber','d','2.04');
+set_param('untitled/vented_chamber','anglength','10');
 set_param('untitled/vented_chamber','InRad','15');
-set_param('untitled/vented_chamber','OutRad','45');
+set_param('untitled/vented_chamber','OutRad','30');
 set_param('untitled/vented_chamber','theta','pi/2');
 
 % RADIAL CHANNEL
-set_param('untitled/n_radial_channel','w','0.475'); % in mm
-set_param('untitled/n_radial_channel','d','4'); % in mm
-set_param('untitled/n_radial_channel','r_in','45');
-set_param('untitled/n_radial_channel','r_out','62');
+set_param('untitled/n_radial_channel','w','2'); % in mm
+set_param('untitled/n_radial_channel','d','0.04'); % in mm
+set_param('untitled/n_radial_channel','r_in','30');
+set_param('untitled/n_radial_channel','r_out','55');
 set_param('untitled/n_radial_channel','init_fill','0');
 set_param('untitled/n_radial_channel','theta','pi/6');
 
 % ISORADIAL CHANNEL
-set_param('untitled/n_isoradial_channel','w','0.45'); % in mm
-set_param('untitled/n_isoradial_channel','d','4'); % in mm
-set_param('untitled/n_isoradial_channel','anglength','20');
-set_param('untitled/n_isoradial_channel','r','62');
+set_param('untitled/n_isoradial_channel','w','2'); % in mm
+set_param('untitled/n_isoradial_channel','d','0.04'); % in mm
+set_param('untitled/n_isoradial_channel','anglength','48');
+set_param('untitled/n_isoradial_channel','r','55');
 set_param('untitled/n_isoradial_channel','init_fill','0');
 set_param('untitled/n_isoradial_channel','theta','pi/6');
 set_param('untitled/n_isoradial_channel','dir','-1');
 
 % MEM PNEUM CHAMBER
 set_param('untitled/mem_pneum_res1','init_fill','0');
-set_param('untitled/mem_pneum_res1','d','4.04'); %mm
-set_param('untitled/mem_pneum_res1','anglength','160'); %°
-set_param('untitled/mem_pneum_res1','InRad','45'); %mm
-set_param('untitled/mem_pneum_res1','OutRad','62'); %mm
-set_param('untitled/mem_pneum_res1','mem_rad','22'); %mm
+set_param('untitled/mem_pneum_res1','d','2.04'); %mm
+set_param('untitled/mem_pneum_res1','anglength','6'); %°
+set_param('untitled/mem_pneum_res1','InRad','16'); %mm
+set_param('untitled/mem_pneum_res1','OutRad','45'); %mm
+set_param('untitled/mem_pneum_res1','mem_rad','6'); %mm
 set_param('untitled/mem_pneum_res1','mem_thick','80'); %um THIS IS THE ONLY VALUE IN MICRONS
 set_param('untitled/mem_pneum_res1','init_stress','100000'); %Pa
-set_param('untitled/mem_pneum_res1','Young','8000000'); %Pa
-set_param('untitled/mem_pneum_res1','Poisson','0.4');
+set_param('untitled/mem_pneum_res1','Young','9800000'); %Pa
+set_param('untitled/mem_pneum_res1','Poisson','0.1');
 set_param('untitled/mem_pneum_res1','theta','pi/2');
 set_param('untitled/mem_pneum_res1','mem_num','1'); %please don't make this 0
 
