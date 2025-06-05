@@ -1,4 +1,4 @@
-component mem_pneum_res
+component mem_pneum_res_s
     nodes
         I = C_uF.C_uF;
     end
@@ -30,16 +30,12 @@ component mem_pneum_res
         p_mem = {0,'Pa'};
         p_visc = {0,'Pa'};
         p_IRRF = {0,'Pa'};
-        r_in_ic = {0,'mm'};
-        r_out_ic = {0,'mm'};
-        r_imid = {0,'mm'};
-        r_b = {0,'mm'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
         init_fill = {0,'1'}; %Initial fill
         d = {0,'mm'}; %Depth
-        anglength = {0,'1'}; %Angle of aperture
+        w = {0,'mm'}; %Width
         InRad = {10,'mm'}; %Inner Radius
         OutRad = {20,'mm'}; %Outer Radius
         mem_rad = {8,'mm'}; %Radius of membrane
@@ -55,7 +51,6 @@ component mem_pneum_res
         Bi_modulus = {0,'Pa'}; %Biaxial modulus
         Euler_fill = {0.1,'1'};
         EP = {100,'1/s'};
-        w = {0,'mm'}; %Width
         V_total = {0,'mm^3'};
         Area = {1,'mm^2'};
         p_vap = {2329.575349457,'Pa'};
@@ -67,8 +62,7 @@ component mem_pneum_res
         across(p,I.p);
         through(q,I.q);
         Bi_modulus = Young/(1-Poisson);
-        w = 2*pi*InRad*anglength/360;
-        Area = anglength*(pi/360)*(OutRad^2-InRad^2);
+        Area = w*(OutRad-InRad);
         fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
         fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
@@ -88,10 +82,8 @@ component mem_pneum_res
         p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
         q.der == q_dot;
         f.der == f_dot;
-        h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
-
+        V_liquid == w*d*(OutRad-h_liquid);
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
-
         p_mem == 4*init_stress*mem_thick*((2/mem_num)*V_change/(pi*mem_rad^4)) + ((8*(1.015-0.247*Poisson))/3)*Bi_modulus*mem_thick*(8*(V_change/mem_num)^3/(pi^3*mem_rad^10));
         V_change == V_liquid;
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;

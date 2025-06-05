@@ -1,7 +1,7 @@
 % START OF THE CL SCRIPT
 
 load_system('C_uF_lib.slx');
-load_system('untitled.slx');
+load_system('untitled_repl.slx');
 
 
 % MODEL PARAMETERS
@@ -9,17 +9,17 @@ load_system('untitled.slx');
 set_param('untitled','Decimation','100000');
 set_param('untitled','FixedStep','0.0005');
 set_param('untitled','StopTime','50');
-set_param('untitled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/20-20.mat');
+set_param('untitled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/linear_inc.mat');
 
-% set_param('untitled/Signal Editor','OutputAfterFinalValue','Extrapolation');
-set_param('untitled/Signal Editor','OutputAfterFinalValue','Holding final value');
+set_param('untitled/Signal Editor','OutputAfterFinalValue','Extrapolation');
+% set_param('untitled/Signal Editor','OutputAfterFinalValue','Holding final value');
 % set_param('untitled/Signal Editor','OutputAfterFinalValue','Setting to zero');
 
 set_param('untitled/Signal Editor','SampleTime','0.0005');
 
 % VENTED CHAMBER
 set_param('untitled/vented_chamber','init_fill','1');
-set_param('untitled/vented_chamber','d','2.04');
+set_param('untitled/vented_chamber','d','2');
 set_param('untitled/vented_chamber','anglength','10');
 set_param('untitled/vented_chamber','InRad','15');
 set_param('untitled/vented_chamber','OutRad','30');
