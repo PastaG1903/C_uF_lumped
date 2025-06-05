@@ -9,7 +9,11 @@ load_system('titled.slx');
 set_param('titled','Decimation','1000000');
 set_param('titled','FixedStep','0.0005');
 set_param('titled','StopTime','20');
+<<<<<<< HEAD
+set_param('titled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/real_repro.mat');
+=======
 set_param('titled/Signal Editor','Filename','/mnt/flashMich/shay/C_uF_lumped_MATLAB/Velocity profiles/real_repro.mat');
+>>>>>>> main
 
 % set_param('titled/Signal Editor','OutputAfterFinalValue','Extrapolation');
 set_param('titled/Signal Editor','OutputAfterFinalValue','Holding final value');

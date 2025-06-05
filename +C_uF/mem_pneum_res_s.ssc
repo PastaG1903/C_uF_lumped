@@ -1,0 +1,134 @@
+component mem_pneum_res_s
+    nodes
+        I = C_uF.C_uF;
+    end
+    inputs
+        f = {0,'Hz'};
+        inp = {-1,'1'};
+    end
+    outputs
+        revOut = {-1,'1'};
+    end
+    annotations
+        revOut : Side = right;
+        I : Side = top;
+        f : Side = top;
+        inp : Side = top;
+    end
+    variables
+        p = {0,'Pa'};
+        q_dot = {0, 'mm^3/s^2'};
+        q = {0,'mm^3/s'};
+        h_liquid = {0,'mm'};
+        p_cent = {0,'Pa'};
+        f_dot = {0,'Hz/s'};
+        p_Euler = {0,'Pa'};
+        V_liquid = {0,'mm^3'};
+        fill = {0,'1'};
+        p_cap = {0,'Pa'};
+        V_change = {0,'mm^3'};
+        p_mem = {0,'Pa'};
+        p_visc = {0,'Pa'};
+        p_IRRF = {0,'Pa'};
+    end
+    parameters
+        G = {0,'1'}; %Azimuthal position of the outlet
+        init_fill = {0,'1'}; %Initial fill
+        d = {0,'mm'}; %Depth
+        w = {0,'mm'}; %Width
+        InRad = {10,'mm'}; %Inner Radius
+        OutRad = {20,'mm'}; %Outer Radius
+        mem_rad = {8,'mm'}; %Radius of membrane
+        mem_thick = {50,'um'}; %Membrane thickness
+        init_stress = {620000,'Pa'}; %Initial stress of membrane
+        Young = {2000000,'Pa'}; %Young's Modulus
+        Poisson = {0.5,'1'}; %Poisson's ratio
+        theta = {pi/2,'1'}; %Contact angle
+        mem_num = {1,'1'}; %Number of membranes
+    end
+    parameters (Access = private)
+        p0 = {101325,'Pa'};
+        Bi_modulus = {0,'Pa'}; %Biaxial modulus
+        Euler_fill = {0.1,'1'};
+        EP = {100,'1/s'};
+        V_total = {0,'mm^3'};
+        Area = {1,'mm^2'};
+        p_vap = {2329.575349457,'Pa'};
+        fluidic_res_liq = {0,'Pa*s/mm^3'};
+        fluidic_res_air = {0,'Pa*s/mm^3'};
+        gamma_lg = {0.07275,'Pa*m'};
+    end
+    function setup
+        across(p,I.p);
+        through(q,I.q);
+        Bi_modulus = Young/(1-Poisson);
+        Area = w*(OutRad-InRad);
+        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
+        V_total = Area*d;
+        if init_fill >=1
+            fill = 1;
+            V_liquid = V_total;
+        elseif init_fill > 0
+            fill = init_fill;
+            V_liquid = init_fill*V_total;
+        else
+            fill = 0;
+            V_liquid = 0;
+        end
+    end
+    equations
+        fill == V_liquid/V_total;
+        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
+        q.der == q_dot;
+        f.der == f_dot;
+        V_liquid == w*d*(OutRad-h_liquid);
+        p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
+        p_mem == 4*init_stress*mem_thick*((2/mem_num)*V_change/(pi*mem_rad^4)) + ((8*(1.015-0.247*Poisson))/3)*Bi_modulus*mem_thick*(8*(V_change/mem_num)^3/(pi^3*mem_rad^10));
+        V_change == V_liquid;
+        p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
+        % p_pneum == p0*((V_total+V_change)/((V_total+V_change)-V_liquid))-p0 ;
+        if V_liquid > 0
+            % p_pneum == p0*((V_total)/((V_total)-V_liquid))-p0 ;
+            if f_dot > 0
+                if fill > Euler_fill
+                    p_Euler.der == EP*(-(G-1)*0.5*(I.density*w*2*pi*OutRad)*f_dot-p_Euler);
+                else
+                    p_Euler.der == EP*(-(G-1)*0.5*(I.density*w*2*pi*OutRad)*f_dot*(fill/Euler_fill)-p_Euler);
+                end
+            else
+                if fill > Euler_fill
+                    p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*OutRad)*f_dot-p_Euler);
+                else
+                    p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*OutRad)*f_dot*(fill/Euler_fill)-p_Euler);
+                end
+            end
+            p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
+        else
+            % p_pneum == p0*(V_total/(V_total-V_liquid))-p0;
+            p_Euler.der == -EP*p_Euler;
+            p_cap == 0;
+        end
+
+        if (inp>1) && (fill<1) && (q>0)
+            % filling
+            V_liquid.der == abs(q);
+            revOut == -1;
+        elseif (inp>1) && (fill>=1) && (q>0)
+            % filled
+            V_liquid.der == 0;
+            revOut == -1;
+        elseif (fill>0) && (q<0)
+            % defilling
+            V_liquid.der == -abs(q);
+            revOut == 2;
+        else
+            % either emptied or initially empty
+            V_liquid.der == 0;
+            revOut == -1;
+        end
+
+        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem*mem_num;
+
+    end
+end
