@@ -44,7 +44,6 @@ component mem_pneum_res_s
         Young = {2000000,'Pa'}; %Young's Modulus
         Poisson = {0.5,'1'}; %Poisson's ratio
         theta = {pi/2,'1'}; %Contact angle
-        mem_num = {1,'1'}; %Number of membranes
     end
     parameters (Access = private)
         p0 = {101325,'Pa'};
@@ -62,10 +61,10 @@ component mem_pneum_res_s
         across(p,I.p);
         through(q,I.q);
         Bi_modulus = Young/(1-Poisson);
-        Area = w*(OutRad-InRad);
+        Area = w*d;
         fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
         fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
-        V_total = Area*d;
+        V_total = Area*(OutRad-InRad);
         if init_fill >=1
             fill = 1;
             V_liquid = V_total;
@@ -84,7 +83,7 @@ component mem_pneum_res_s
         f.der == f_dot;
         V_liquid == w*d*(OutRad-h_liquid);
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
-        p_mem == 4*init_stress*mem_thick*((2/mem_num)*V_change/(pi*mem_rad^4)) + ((8*(1.015-0.247*Poisson))/3)*Bi_modulus*mem_thick*(8*(V_change/mem_num)^3/(pi^3*mem_rad^10));
+        p_mem == 4*init_stress*mem_thick*(2*V_change/(pi*mem_rad^4)) + ((8*(1.015-0.247*Poisson))/3)*Bi_modulus*mem_thick*(2^3*(V_change)^3/(pi^3*mem_rad^10));
         V_change == V_liquid;
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
         % p_pneum == p0*((V_total+V_change)/((V_total+V_change)-V_liquid))-p0 ;
@@ -110,9 +109,9 @@ component mem_pneum_res_s
             p_cap == 0;
         end
 
-        if (inp>1) && (fill<1) && (q>0)
+        if (inp>1) && (fill<1 || fill<=0) && (q>0)
             % filling
-            V_liquid.der == abs(q);
+            V_liquid.der == q;
             revOut == -1;
         elseif (inp>1) && (fill>=1) && (q>0)
             % filled
@@ -120,7 +119,7 @@ component mem_pneum_res_s
             revOut == -1;
         elseif (fill>0) && (q<0)
             % defilling
-            V_liquid.der == -abs(q);
+            V_liquid.der == q;
             revOut == 2;
         else
             % either emptied or initially empty
@@ -128,7 +127,7 @@ component mem_pneum_res_s
             revOut == -1;
         end
 
-        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem*mem_num;
+        p + p_Euler + p_cap + p_visc + p_IRRF == p_mem + p_cent
 
     end
 end
