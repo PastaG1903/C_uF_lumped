@@ -40,7 +40,7 @@ component n_isoradial_channel
         d = {100, 'mm'}; %Depth
         anglength = {100,'1'}; %Aperture angle
         r = {20, 'mm'}; %Radial distance to channel
-        init_fill = {0, '1'}; %Initial fill level
+        init_vol = {0, 'mm^3'}; %Initial fill level
         theta = {pi/2,'1'}; %Contact angle
         dir = {0,'1'};
     end
@@ -61,24 +61,24 @@ component n_isoradial_channel
         fluidic_res_liq = 12*I.viscosity*(l)/(w^3*d*(1-192/(pi^5)*w/d*(tanh(pi*d/2/w)+31/32*1.0369)-1));
         fluidic_res_air = 12*I.viscosity_air*(l)/(w^3*d*(1-192/(pi^5)*w/d*(tanh(pi*d/2/w)+31/32*1.0369)-1));
         InO = -1;
-        if (init_fill >= 1) || (init_fill <= -1)
+        if (init_vol >= V_total) || (init_vol <= -V_total)
             fill = 1;
             V_liquid = V_total;
-        elseif init_fill > 0
-            fill = init_fill;
-            V_liquid = init_fill*V_total;
-        elseif init_fill == 0
+        elseif init_vol > 0
+            fill = init_vol/V_total;
+            V_liquid = init_vol;
+        elseif init_vol == 0
             fill = 0;
             V_liquid = 0;
         else
-            fill = -init_fill;
-            V_liquid = -init_fill*V_total;
+            fill = -init_vol/V_total;
+            V_liquid = -init_vol;
         end
     end
     equations
         fill == V_liquid/V_total;
         % INITIALIZATION CONDITIONS
-        if (InO<0) && (init_fill>0) && (init_fill<1)
+        if (InO<0) && (init_vol>0) && (init_vol<V_total)
             % Init channel partially filled from inlet
             if inlet>1
                 V_liquid.der == abs(q);
@@ -89,7 +89,7 @@ component n_isoradial_channel
             wet == 2;
             revOut == -1;
             InO == 2;
-        elseif (InO<0) && (init_fill<0) && (init_fill>-1)
+        elseif (InO<0) && (init_vol<0) && (init_vol>-V_total)
             % Init channel partially filled form outlet
             if revIn>1
                 V_liquid.der == abs(q);
@@ -100,14 +100,14 @@ component n_isoradial_channel
             wet == 2;
             revOut == 2;
             InO == 2;
-        elseif (InO<0) && (init_fill == 0)
+        elseif (InO<0) && (init_vol == 0)
             %Init channel empty
             V_liquid.der == 0;
             outlet == -1;
             wet == -1;
             revOut == -1;
             InO == 2;
-        elseif (InO<0) && (init_fill == 1)
+        elseif (InO<0) && (init_vol == V_total)
             % Init channel full
             V_liquid.der == 0;
             outlet == 2;

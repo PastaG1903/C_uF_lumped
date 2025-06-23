@@ -31,7 +31,7 @@ component vented_chamber
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
-        init_fill = {0,'1'}; %Initial fill
+        init_vol = {0,'mm^3'}; %Initial fill
         d = {0,'mm'}; %Depth
         anglength = {0,'1'}; %Angle of aperture
         InRad = {10,'mm'}; %Inner Radius
@@ -59,12 +59,12 @@ component vented_chamber
         fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
         fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*d;
-        if init_fill >=1
+        if init_vol >=V_total
             fill = 1;
             V_liquid = V_total;
-        elseif init_fill > 0
-            fill = init_fill;
-            V_liquid = init_fill*V_total;
+        elseif init_vol > 0
+            fill = init_vol/V_total;
+            V_liquid = init_vol;
         else
             fill = 0;
             V_liquid = 0;

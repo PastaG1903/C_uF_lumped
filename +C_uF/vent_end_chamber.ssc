@@ -1,0 +1,119 @@
+component vent_end_chamber
+    nodes
+        I = C_uF.C_uF;
+    end
+    inputs
+        f = {0,'Hz'};
+        revIn = {0, '1'};
+    end
+    outputs
+        out = {2,'1'};
+    end
+    annotations
+        revIn : Side = right;
+        I : Side = bottom;
+        f : Side = top;
+        out : Side = bottom;
+    end
+    variables
+        p = {0,'Pa'};
+        q = {0,'mm^3/s'};
+        q_dot = {0, 'mm^3/s^2'};
+        h_liquid = {0,'mm'};
+        p_cent = {0,'Pa'};
+        f_dot = {0,'Hz/s'};
+        p_Euler = {0,'Pa'};
+        V_liquid = {0,'mm^3'};
+        fill = {0,'1'};
+        p_cap = {0,'Pa'};
+        p_visc = {0,'Pa'};
+        p_IRRF = {0,'Pa'};
+    end
+    parameters
+        G = {0,'1'}; %Azimuthal position of the outlet
+        init_vol = {0,'mm^3'}; %Initial volume
+        d = {0,'mm'}; %Depth
+        w = {0,'mm'}; %width
+        InRad = {10,'mm'}; %Inner Radius
+        OutRad = {10,'mm'}; %Outer Radius
+        theta = {pi/2,'1'}; %Contact angle
+    end
+    parameters (Access = private)
+        Area = {0,'mm^2'};
+        V_total = {0,'mm^3'};
+        p0 = {101325,'Pa'};
+        Euler_fill = {0.1,'1'};
+        EP = {100,'1/s'};
+        fluidic_res_liq = {0,'Pa*s/mm^3'};
+        fluidic_res_air = {0,'Pa*s/mm^3'};
+        gamma_lg = {0.07275,'Pa*m'};
+    end
+    function setup
+        across(p,I.p,[]);
+        through(q,I.q,[]);
+        Area = (OutRad-InRad)*w;
+        fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
+        fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
+        V_total = Area*d;
+        if init_vol >=V_total
+            fill = 1;
+            V_liquid = V_total;
+        elseif init_vol > 0
+            V_liquid = init_vol
+            fill = init_vol/V_total
+        else
+            fill = 0;
+            V_liquid = 0;
+        end
+    end
+    equations
+        fill == V_liquid/V_total;
+        p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
+        q.der == q_dot;
+        f.der == f_dot;
+        V_liquid == w*d*(OutRad-h_liquid);
+        p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
+        p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
+        if V_liquid > 0
+            if f_dot > 0
+                if fill > Euler_fill
+                    p_Euler.der == EP*(-(G-1)*0.5*(I.density*w*2*pi*InRad)*f_dot-p_Euler);
+                else
+                    p_Euler.der == EP*(-(G-1)*0.5*(I.density*w*2*pi*InRad)*f_dot*(fill/Euler_fill)-p_Euler);
+                end
+            else
+                if fill > Euler_fill
+                    p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*InRad)*f_dot-p_Euler);
+                else
+                    p_Euler.der == EP*(-(G+1)*0.5*(I.density*w*2*pi*InRad)*f_dot*(fill/Euler_fill)-p_Euler);
+                end
+            end
+            p_cap == gamma_lg*(((2*cos(theta))/w)+((2*cos(theta))/d));
+
+        else
+            p_Euler.der == -EP*p_Euler;
+            p_cap == 0;
+        end
+
+        if (fill>0) && (revIn<0) && (q<0)
+            % emptying
+            V_liquid.der == -abs(q);
+            out == 2;
+        elseif (fill<=0) && ((q<0) || ((q>0) && (revIn<0)))
+            % continuous empty
+            V_liquid.der == 0;
+            out == -1;
+        elseif (fill<1) && (revIn>1) && (q>0)
+            % filling
+	          V_liquid.der == abs(q);
+            out == -1;
+        else
+            % continuous filled
+            V_liquid.der == 0;
+            out == -1;
+        end
+
+        p + p_cap - p_visc - p_IRRF == p_cent + p_Euler;
+
+    end
+end

@@ -27,13 +27,14 @@ component mem_pneum_res_s
         fill = {0,'1'};
         p_cap = {0,'Pa'};
         V_change = {0,'mm^3'};
+        mem_h = {0, 'mm'};
         p_mem = {0,'Pa'};
         p_visc = {0,'Pa'};
         p_IRRF = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
-        init_fill = {0,'1'}; %Initial fill
+        init_vol = {0,'mm^3'}; %Initial fill
         d = {0,'mm'}; %Depth
         w = {0,'mm'}; %Width
         InRad = {10,'mm'}; %Inner Radius
@@ -65,12 +66,12 @@ component mem_pneum_res_s
         fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
         fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
         V_total = Area*(OutRad-InRad);
-        if init_fill >=1
+        if init_vol >= V_total
             fill = 1;
             V_liquid = V_total;
-        elseif init_fill > 0
-            fill = init_fill;
-            V_liquid = init_fill*V_total;
+        elseif init_vol > 0
+            fill = init_vol/V_total;
+            V_liquid = init_vol;
         else
             fill = 0;
             V_liquid = 0;
@@ -81,9 +82,10 @@ component mem_pneum_res_s
         p_IRRF == (OutRad-InRad)*q_dot*(fill*I.density+(1-fill)*I.density_gas)/(w*d);
         q.der == q_dot;
         f.der == f_dot;
-        V_liquid == w*d*(OutRad-h_liquid);
-        p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
-        p_mem == 4*init_stress*mem_thick*(2*V_change/(pi*mem_rad^4)) + ((8*(1.015-0.247*Poisson))/3)*Bi_modulus*mem_thick*(2^3*(V_change)^3/(pi^3*mem_rad^10));
+        h_liquid == OutRad - V_liquid/(w*d);
+        p_cent == 0.5*I.density*(OutRad^2-h_liquid^2)*(2*pi*f)^2 + 0.5*I.density_gas*(h_liquid^2-InRad^2)*(2*pi*f)^2;
+        p_mem == 4*init_stress*mem_thick*mem_h/mem_rad^2 + (7-Poisson)*Bi_modulus*mem_thick*mem_h^3/mem_rad^4/3;
+        V_change == 1.04*(2/3)*pi*mem_rad^2*mem_h;
         V_change == V_liquid;
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
         % p_pneum == p0*((V_total+V_change)/((V_total+V_change)-V_liquid))-p0 ;
@@ -127,7 +129,7 @@ component mem_pneum_res_s
             revOut == -1;
         end
 
-        p + p_Euler + p_cap + p_visc + p_IRRF == p_mem + p_cent
+        p + p_cap + p_Euler == p_mem + p_cent + p_visc
 
     end
 end
