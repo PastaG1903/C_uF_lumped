@@ -51,10 +51,10 @@ component vented_chamber_s
     function setup
         across(p,I.p,[]);
         through(q,I.q,[]);
-        Area = (OutRad-InRad)*w;
+        Area = d*w;
         fluidic_res_liq = 28.4*I.viscosity*(OutRad-InRad)/(w^2*d^2);
         fluidic_res_air = 28.4*I.viscosity_air*(OutRad-InRad)/(w^2*d^2);
-        V_total = Area*d;
+        V_total = Area*(OutRad-InRad);
         if init_vol >=V_total
             fill = 1;
             V_liquid = V_total;
