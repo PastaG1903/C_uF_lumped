@@ -7,7 +7,7 @@ load_system('untitled_repl.slx');
 % MODEL PARAMETERS
 
 set_param('untitled_repl','Decimation','100000');
-set_param('untitled_repl','FixedStep','0.001');
+set_param('untitled_repl','FixedStep','0.005');
 set_param('untitled_repl','StopTime','120');
 set_param('untitled_repl/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/100_100_1000.mat');
 
@@ -15,7 +15,7 @@ set_param('untitled_repl/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_
 set_param('untitled_repl/Signal Editor','OutputAfterFinalValue','Holding final value');
 % set_param('untitled_repl/Signal Editor','OutputAfterFinalValue','Setting to zero');
 
-set_param('untitled_repl/Signal Editor','SampleTime','0.001');
+set_param('untitled_repl/Signal Editor','SampleTime','0.005');
 
 % VENTED CHAMBER
 set_param('untitled_repl/vented_chamber_s','init_vol','0');
@@ -46,7 +46,7 @@ set_param('untitled_repl/n_radial_channel','theta','pi/2');
 set_param('untitled_repl/mem_pneum_res_s','init_vol','0');
 set_param('untitled_repl/mem_pneum_res_s','d','2'); %mm
 set_param('untitled_repl/mem_pneum_res_s','w','5'); %mm
-set_param('untitled_repl/mem_pneum_res_s','InRad','31.5'); %mm
+set_param('untitled_repl/mem_pneum_res_s','InRad','41.5'); %mm
 set_param('untitled_repl/mem_pneum_res_s','OutRad','81.5'); %mm
 set_param('untitled_repl/mem_pneum_res_s','mem_rad','5'); %mm
 set_param('untitled_repl/mem_pneum_res_s','mem_thick','100'); %um THIS IS THE ONLY VALUE IN MICRONS
