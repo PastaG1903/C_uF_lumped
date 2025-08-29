@@ -263,9 +263,11 @@ component n_radial_channel
         end
 
         if inlet>1 && revIn<0
-          p + p_cent + p_cap == p_IRRF + p_visc;
+          p == -p_cent - p_cap + p_visc + p_IRRF;
+          %p + p_cent + p_cap == p_IRRF + p_visc;
         else
-          p + p_cent - p_cap == p_IRRF + p_visc;
+          p == -p_cent + p_cap + p_visc + p_IRRF;
+          %p + p_cent - p_cap == p_IRRF + p_visc;
         end
     end
 end

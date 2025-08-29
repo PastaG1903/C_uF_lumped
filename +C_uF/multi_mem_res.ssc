@@ -26,16 +26,16 @@ component multi_mem_res
         V_liquid = {0,'mm^3'};
         fill = {0,'1'};
         p_cap = {0,'Pa'};
-        %V_change_1 = {0,'mm^3'};
-        %V_change_2 = {0,'mm^3'};
-        %V_change_3 = {0,'mm^3'};
-        %p_mem_1 = {0,'Pa'};
-        %p_mem_2 = {0,'Pa'};
-        %p_mem_3 = {0,'Pa'};
+        V_change_1 = {0,'mm^3'};
+        V_change_2 = {0,'mm^3'};
+        V_change_3 = {0,'mm^3'};
+        p_mem_1 = {0,'Pa'};
+        p_mem_2 = {0,'Pa'};
+        p_mem_3 = {0,'Pa'};
         p_visc = {0,'Pa'};
         p_IRRF = {0,'Pa'};
-        %p_mem_t = {0,'Pa'};
-        p_pneum = {0,'Pa'};
+        p_mem_t = {0,'Pa'};
+        %p_pneum = {0,'Pa'};
     end
     parameters
         G = {0,'1'}; %Azimuthal position of the outlet
@@ -75,8 +75,6 @@ component multi_mem_res
         fluidic_res_liq = {0,'Pa*s/mm^3'};
         fluidic_res_air = {0,'Pa*s/mm^3'};
         gamma_lg = {0.07275,'Pa*m'};
-        epsilon = {10^-9,'Hz'};
-        C = {1,'Hz'};
     end
     function setup
         across(p,I.p);
@@ -109,21 +107,19 @@ component multi_mem_res
         f.der == f_dot;
         h_liquid == sqrt(abs(OutRad^2-V_liquid*360/d/anglength/pi));
         p_cent == 0.5*I.density*(OutRad^2-(h_liquid)^2)*(2*pi*f)^2 + 0.5*I.density_gas*((h_liquid)^2-InRad^2)*(2*pi*f)^2;
-        %p_mem_1 == 4*init_stress_1*mem_thick_1*(2*V_change_1/(pi*mem_rad_1^4)) + ((8*(1.015-0.247*Poisson_1))/3)*Bi_modulus_1*mem_thick_1*(8*V_change_1^3/(pi^3*mem_rad_1^10));
-        %p_mem_1 == p_mem_2;
-        %p_mem_2 == p_mem_3;
+        p_mem_1 == 4*init_stress_1*mem_thick_1*(2*V_change_1/(pi*mem_rad_1^4)) + ((8*(1.015-0.247*Poisson_1))/3)*Bi_modulus_1*mem_thick_1*(8*V_change_1^3/(pi^3*mem_rad_1^10));
+        p_mem_1 == p_mem_2;
+        p_mem_2 == p_mem_3;
 
-        %V_change_1 + V_change_2 + V_change_3 == V_liquid;
+        V_change_1 + V_change_2 + V_change_3 == V_liquid;
 
-        %p_mem_2 == 4*init_stress_2*mem_thick_2*(2*V_change_2/(pi*mem_rad_2^4)) + ((8*(1.015-0.247*Poisson_2))/3)*Bi_modulus_2*mem_thick_2*(8*V_change_2^3/(pi^3*mem_rad_2^10));
-        %p_mem_3 == 4*init_stress_3*mem_thick_3*(2*V_change_3/(pi*mem_rad_3^4)) + ((8*(1.015-0.247*Poisson_3))/3)*Bi_modulus_3*mem_thick_3*(8*V_change_3^3/(pi^3*mem_rad_3^10));
-        %p_mem_1 == p_mem_2;
-        %p_mem_2 == p_mem_3;
-        %p_mem_t == p_mem_1 + p_mem_2 + p_mem_3;
+        p_mem_2 == 4*init_stress_2*mem_thick_2*(2*V_change_2/(pi*mem_rad_2^4)) + ((8*(1.015-0.247*Poisson_2))/3)*Bi_modulus_2*mem_thick_2*(8*V_change_2^3/(pi^3*mem_rad_2^10));
+        p_mem_3 == 4*init_stress_3*mem_thick_3*(2*V_change_3/(pi*mem_rad_3^4)) + ((8*(1.015-0.247*Poisson_3))/3)*Bi_modulus_3*mem_thick_3*(8*V_change_3^3/(pi^3*mem_rad_3^10));
+        p_mem_t == p_mem_1 + p_mem_2 + p_mem_3;
 
         p_visc == (fill*fluidic_res_liq + (1-fill)*fluidic_res_air)*q;
 
-        p_pneum == p0*(V_total/(V_total-V_liquid))^1.26-p0;
+        %p_pneum == p0*(V_total/(V_total-V_liquid))^1.26-p0;
 
         if V_liquid > 0
             if f_dot > 0
@@ -164,7 +160,8 @@ component multi_mem_res
         end
 
         %p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem_t;
-        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_pneum;
+        %p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_pneum;
+        p == -p_cap + p_visc + p_cent + p_IRRF - p_Euler + p_mem_t;
 
     end
 end
