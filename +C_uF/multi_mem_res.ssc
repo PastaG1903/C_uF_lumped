@@ -148,7 +148,7 @@ component multi_mem_res
             revOut == -1;
         end
 
-        p + p_Euler - p_cent + p_cap - p_visc - p_IRRF == p_mem_1 + p_mem_2 + p_mem_3;
+        p + p_cap - p_visc - p_IRRF == p_mem_1 + p_mem_2 + p_mem_3 + p_Euler + p_cent;
 
     end
 end

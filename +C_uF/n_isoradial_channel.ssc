@@ -245,7 +245,7 @@ component n_isoradial_channel
         end
 
         if inlet>1 && revIn<0
-          p + p_Euler + p_cap == p_visc + p_IRRF;
+          p + p_Euler + p_cap == p_IRRF + p_visc ;
         else
           p + p_Euler - p_cap == p_IRRF + p_visc;
         end

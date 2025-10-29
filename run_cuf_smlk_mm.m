@@ -8,8 +8,8 @@ load_system('titled.slx');
 
 set_param('titled','Decimation','1000000');
 set_param('titled','FixedStep','0.0005');
-set_param('titled','StopTime','60');
-set_param('titled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/15-15.mat');
+set_param('titled','StopTime','30');
+set_param('titled/Signal Editor','Filename','/home/shay/FM_SSD/shay/C_uF_lumped_MATLAB/Velocity profiles/15-15-30rpms.mat');
 
 % set_param('titled/Signal Editor','OutputAfterFinalValue','Extrapolation');
 set_param('titled/Signal Editor','OutputAfterFinalValue','Holding final value');
@@ -53,25 +53,25 @@ set_param('titled/multi_mem_res','theta','pi/2');
 set_param('titled/multi_mem_res','G','1'); %1 when flow is opposite to the direction of rotation
 
 %   Membrane 1
-set_param('titled/multi_mem_res','mem_rad_1','20'); %mm
+set_param('titled/multi_mem_res','mem_rad_1','25'); %mm
 set_param('titled/multi_mem_res','mem_thick_1','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_1','980000'); %Pa
+set_param('titled/multi_mem_res','init_stress_1','1568000'); %Pa
 set_param('titled/multi_mem_res','Young_1','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_1','0.1');
+set_param('titled/multi_mem_res','Poisson_1','0.01');
 
 %   Membrane 2
-set_param('titled/multi_mem_res','mem_rad_2','20'); %mm
+set_param('titled/multi_mem_res','mem_rad_2','25'); %mm
 set_param('titled/multi_mem_res','mem_thick_2','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_2','980000'); %Pa
+set_param('titled/multi_mem_res','init_stress_2','1568000'); %Pa
 set_param('titled/multi_mem_res','Young_2','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_2','0.1');
+set_param('titled/multi_mem_res','Poisson_2','0.01');
 
 %   Membrane 3
-set_param('titled/multi_mem_res','mem_rad_3','20'); %mm
+set_param('titled/multi_mem_res','mem_rad_3','25'); %mm
 set_param('titled/multi_mem_res','mem_thick_3','100'); %um THIS IS THE ONLY VALUE IN MICRONS
-set_param('titled/multi_mem_res','init_stress_3','980000'); %Pa
+set_param('titled/multi_mem_res','init_stress_3','1568000'); %Pa
 set_param('titled/multi_mem_res','Young_3','9800000'); %Pa
-set_param('titled/multi_mem_res','Poisson_3','0.1');
+set_param('titled/multi_mem_res','Poisson_3','0.01');
 
 
 simOut = sim('titled.slx');
